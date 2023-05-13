@@ -1,0 +1,165 @@
+body {
+  padding: 0;
+  margin: 0;
+  color: #f9f9f9;
+  background-color: #000;
+  overflow-x: hidden;
+}
+
+span,p,h1{
+margin: 0px;
+padding: 0px;
+}
+
+a {
+  color: #f9f9f9;
+  text-decoration: none;
+}
+button,
+input {
+  border: 0;
+  outline: 0;
+  font-size: 2em;
+  color: #f9f9f9;
+  background: transparent;
+}
+input:focus::-webkit-input-placeholder{
+  color: #fff;
+  font-size: 1em;
+  font-family: "Josefin Sans", sans-serif;
+}
+input::placeholder {
+  mix-blend-mode: difference;
+  font-family: "Josefin Sans", sans-serif;
+}
+span {
+  font-family: "Alata", sans-serif;
+
+}
+.min-sc{
+
+}
+#blob{
+  z-index: -10;
+  height: 300px;
+  width: 300px;
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: 50em;
+  animation: ro 20s ease infinite;
+  background-image: linear-gradient(90deg, #5f2c82, #49a09d);
+}
+@keyframes ro{
+  from{
+    transform: rotate(0deg);
+  }
+  to{
+    transform: rotate(360deg);
+  }
+}
+.min-inr{
+  width: 100vw;
+  height: 100%;
+  backdrop-filter: blur(50px);
+}
+.nm-hld-scc{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nm-hl {
+  top: 50px;
+  left: 50px;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.adn {
+  font-family: "Alata", sans-serif;
+  font-size: 1.5em;
+}
+
+.ggl {
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.min-bdy {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.inp-hld{
+  display: flex;
+  align-items: center;
+  transition: .3s ease;
+  border-radius: 10px;
+  padding-left:10px;
+  flex-direction: row-reverse;
+}
+.inp-hld:hover{
+  background-color: #25252560 !important;
+}
+.inp-hld input {
+  height: 3em;
+}
+.bkmrk-scc-hld {
+  padding: 10px;
+  border-radius: 10px;
+  border:2px solid #f9f9f940;
+  background-color: #25252560;
+}
+
+.bkmrk-inr {
+  display: flex;
+}
+
+.bkmrk-it-hld {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  gap: 2em;
+  justify-content: flex-start;
+}
+
+.bkmrk {
+  margin: 8px;
+  padding: 10px;
+  width: 100% ;
+  border-radius: 8px;
+  transition: 0.3s ease;
+    border:2px solid #f9f9f940;
+  background-color: #25252560;
+  font-family: "Alata", sans-serif;
+}
+
+.ico {
+  margin-right: 10px;
+}
+
+.bkmrk:hover {
+  border:2px solid #f9f9f9;
+  background-color: #25252590;
+}
+
+.bkmrk-a:hover {
+  text-decoration: none;
+}
+
+.bkmrk:hover .bkmrk-a {
+  color: #f9f9f9;
+}
+
+.bkmrk:hover .ico {
+  color: #f9f9f9 !important;
+}
+.innr-sc{
+  display: flex;
+  flex-direction: column;
+  row-gap: 2em;
+}
