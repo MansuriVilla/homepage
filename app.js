@@ -61,3 +61,32 @@ document.body.onpointermove = event => {
       top: `${clientY}px`
     }, {duration:3000, fill:"forwards"})
   }
+
+
+// time script
+const timeH2 = document.querySelector("h2");
+const timeP = document.querySelector("p");
+
+
+
+
+function updateTime() {
+  const currentDate = new Date();
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const seconds = currentDate.getSeconds();
+
+  const formattedTime = `${hours}:${minutes}:${seconds}`;
+  const formattedDate = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+
+  timeH2.textContent = formattedTime;
+  timeP.textContent = formattedDate;
+}
+
+// Call updateTime function initially to display current date and time
+updateTime();
+
+// Update time every second
+setInterval(updateTime, 1000);
+
+//adding bookmark scritp
