@@ -44,7 +44,17 @@
                 <input class="inp" type="text" placeholder="Search here">
                 
               </div>
-              <ul class="suggestions" role="listbox" aria-live="polite"></ul>
+              
+              
+              <ul class="suggestions" role="listbox" aria-live="polite">
+                <li>
+                  <div class="loader_spinner-container">
+                    <div id="loading-spinner" class="spinner" style="display:none;"></div>
+                    <button id="clear-history" class="site_delete-cta bkmrk" style="display:none;">Clear History</button>
+                  </div>
+                </li>
+              </ul>
+              
               
             </div>
             <div class="bkmrk-scc-hld">
