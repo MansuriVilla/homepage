@@ -1,42 +1,120 @@
 // SEARCH BAR SCRIPT START
 
 const searchInputField = document.querySelector(".nav-search input");
-const searchBtn = document.querySelector(".nav-search button");
+const suggestionsList = document.querySelector(".suggestions");
+let currentIndex = -1;
 
-searchInputField.addEventListener("keyup", function (event) {
-  console.log("keyup event triggered", event.keyCode);
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    searchBtn.click();
+// Debounce Function
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// Display Skeleton Loaders
+function showSkeletonLoaders(count = 5) {
+  suggestionsList.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const skeletonItem = document.createElement("li");
+    skeletonItem.className = "skeleton";
+    suggestionsList.appendChild(skeletonItem);
+  }
+}
+
+// Fetch Suggestions with Alternative Proxy
+searchInputField.addEventListener(
+  "input",
+  debounce(function () {
+    const query = searchInputField.value.trim();
+
+    if (query === "") {
+      suggestionsList.innerHTML = "";
+      return;
+    }
+
+    const proxyUrl = "https://api.allorigins.win/get?url=";
+    const googleSuggestUrl = `https://suggestqueries.google.com/complete/search?client=firefox&q=${query}`;
+
+    showSkeletonLoaders(); // Show skeleton loaders
+    fetch(proxyUrl + encodeURIComponent(googleSuggestUrl))
+      .then((response) => response.json())
+      .then((data) => {
+        const suggestions = JSON.parse(data.contents)[1]; // Extract suggestions from the response
+        if (Array.isArray(suggestions)) {
+          suggestionsList.innerHTML = suggestions
+            .map((suggestion) => `<li role="option">${suggestion}</li>`)
+            .join("");
+          currentIndex = -1; // Reset index for navigation
+        } else {
+          suggestionsList.innerHTML = ""; // Clear if no suggestions
+        }
+      })
+      .catch((error) => console.error("Error fetching suggestions:", error));
+  }, 300)
+);
+
+// Handle Suggestion Click
+suggestionsList.addEventListener("click", function (event) {
+  if (event.target.tagName === "LI") {
+    searchInputField.value = event.target.textContent;
+    suggestionsList.innerHTML = ""; // Clear suggestions
+    performSearch(); // Trigger search on suggestion click
   }
 });
 
-searchBtn.addEventListener("click", function () {
-  console.log("click event triggered");
-  const searchQuery = searchInputField.value;
-  window.location.href = `https://www.google.com/search?q=${searchQuery}`;
-});
+// Keyboard Navigation for Suggestions
+searchInputField.addEventListener("keydown", (event) => {
+  const items = document.querySelectorAll(".suggestions li");
 
-//add keydown//
-document.addEventListener("keydown", function (event) {
-  if (event.target.tagName === "INPUT") return; // Do nothing if user is typing in an input field
-
-  if (event.key === "/") {
+  if (event.key === "ArrowDown") {
+    currentIndex = (currentIndex + 1) % items.length;
+    highlightSuggestion(items, currentIndex);
+  } else if (event.key === "ArrowUp") {
+    currentIndex = (currentIndex - 1 + items.length) % items.length;
+    highlightSuggestion(items, currentIndex);
+  } else if (event.key === "Enter") {
     event.preventDefault();
-    searchInputField.focus();
+    if (currentIndex >= 0) {
+      // Select suggestion
+      searchInputField.value = items[currentIndex].textContent;
+    }
+    performSearch(); // Trigger search on Enter
   }
 });
+
+// Highlight Suggestions
+function highlightSuggestion(items, index) {
+  items.forEach((item, i) => {
+    item.classList.toggle("highlighted", i === index);
+  });
+}
+
+// Perform Google Search
+function performSearch() {
+  const query = searchInputField.value.trim();
+  if (query) {
+    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    window.location.href = googleSearchUrl;
+  }
+}
+
 // SEARCH BAR SCRIPT END
 
-// RANDOM TEXT SCRIPT START
 
+
+
+// RANDOM TEXT SCRIPT START
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 let iterations = 0;
 
 document.querySelectorAll("span").forEach((span) => {
   span.addEventListener("mouseover", (event) => {
     const value = event.target.dataset.value;
-    const intervalId = setInterval(() => {
+    let animationFrameId;
+
+    function animate() {
       event.target.innerText = value
         .split("")
         .map((letter, index) => {
@@ -47,20 +125,21 @@ document.querySelectorAll("span").forEach((span) => {
         })
         .join("");
       iterations++;
-      if (iterations >= value.length * 30) clearInterval(intervalId);
-    }, 50);
 
-    event.target.addEventListener("mouseout", () => {
-      clearInterval(intervalId);
-      event.target.innerText = value;
-      iterations = 0;
-    });
+      if (iterations < value.length * 30) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        iterations = 0;
+        cancelAnimationFrame(animationFrameId);
+      }
+    }
+
+    animate();
   });
 });
 // RANDOM TEXT SCRIPT END
 
 // OBJECT FOLLOWING MOUSE SCRIPT START
-
 const blob = document.getElementById("blob");
 
 document.body.onpointermove = (event) => {
@@ -81,9 +160,9 @@ const timeP = document.querySelector("p");
 
 function updateTime() {
   const currentDate = new Date();
-  const hours = currentDate.getHours();
-  const minutes = currentDate.getMinutes();
-  const seconds = currentDate.getSeconds();
+  const hours = String(currentDate.getHours()).padStart(2, "0");
+  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+  const seconds = String(currentDate.getSeconds()).padStart(2, "0");
 
   const formattedTime = `${hours}:${minutes}:${seconds}`;
   const formattedDate = currentDate
@@ -103,5 +182,4 @@ updateTime();
 
 // Update time every second
 setInterval(updateTime, 1000);
-
-//  TIME SCRIPT START  END
+// TIME SCRIPT END
